@@ -1,5 +1,3 @@
-// routes/userRoutes.js
-
 const express =require("express");
 const {
   registerUser,
@@ -7,7 +5,7 @@ const {
   getProfile,
   updateProfile,
 } =require("../Controllers/usercontroller.js");
-const { protect } =require("../Middleware/authmiddleware.js");
+const protect  =require("../Middleware/authmiddleware.js");
 
 const router = express.Router();
 

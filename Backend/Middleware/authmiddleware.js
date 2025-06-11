@@ -1,11 +1,9 @@
-// middleware/authMiddleware.js
 
-import jwt from "jsonwebtoken";
-import User from "../Models/usermodel";
+const jwt = require("jsonwebtoken");
+const User = require("../Models/usermodel");
 
-const JWT_SECRET = "your_jwt_secret_key"; // Replace with process.env.JWT_SECRET in production
-
-export const protect = async (req, res, next) => {
+const JWT_SECRET = "Security"; 
+ const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -28,3 +26,5 @@ export const protect = async (req, res, next) => {
     res.status(401).json({ message: "Invalid or expired token" });
   }
 };
+
+module.exports=protect

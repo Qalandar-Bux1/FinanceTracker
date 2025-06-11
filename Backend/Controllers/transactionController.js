@@ -1,6 +1,6 @@
 const Transaction = require("../Models/transactionmodel");
-const User = require("../models/UserSchema");
-const moment = require("moment");
+const User = require("../Models/usermodel");
+
 
 // Add Transaction
 const addTransaction = async (req, res) => {
