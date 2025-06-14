@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const Transaction = require("../Models/transactionmodel");
 const User = require("../Models/usermodel");
 
@@ -7,8 +9,8 @@ const addTransaction = async (req, res) => {
   try {
     const { title, amount, description, date, category, userId, transactionType } = req.body;
 
-    if (!title || !amount || !description || !date || !category || !transactionType) {
-      return res.status(400).json({ success: false, message: "Please fill all fields" });
+    if (!title || !amount || !description || !date || !category || !transactionType || !userId) {
+      return res.status(400).json({ success: false, message: "All fields including userId are required." });
     }
 
     const user = await User.findById(userId);
@@ -29,25 +31,33 @@ const addTransaction = async (req, res) => {
 
     res.status(201).json({ success: true, message: "Transaction added successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("🚨 Server error in addTransaction:", error);
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
 
 // Get All Transactions (filtered)
 const getAllTransactions = async (req, res) => {
   try {
-    const { userId, type, frequency, startDate, endDate } = req.body;
+    const { userId, type } = req.body;
 
-    const query = { user: userId };
-    if (type !== "all") query.transactionType = type;
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "userId is required" });
+    }
+
+    const query = { user: new mongoose.Types.ObjectId(userId) };
+    if (type && type !== "all") query.transactionType = type;
 
     const transactions = await Transaction.find(query).sort({ date: -1 });
 
     res.status(200).json({ success: true, transactions });
   } catch (error) {
+    console.error("🔥 Error in getAllTransactions:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
 
 // Delete Transaction
 const deleteTransaction = async (req, res) => {
@@ -91,10 +101,22 @@ const updateTransaction = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+ 
 
+ const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 module.exports = {
   addTransaction,
   getAllTransactions,
   deleteTransaction,
   updateTransaction,
+  getProfile,
 };

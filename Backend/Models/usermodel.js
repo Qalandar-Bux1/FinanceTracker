@@ -1,4 +1,5 @@
-const mongoose =require("mongoose");
+const mongoose = require("mongoose");
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -14,12 +15,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: [6, "Password must be at least 6 characters"],
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  transactions: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Transaction",
+    },
+  ],
+  
 });
-
 const Usermodel = mongoose.model("User", userSchema);
 
-module.exports=Usermodel
+module.exports = Usermodel;
