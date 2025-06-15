@@ -36,7 +36,7 @@ const addTransaction = async (req, res) => {
   }
 };
 
-// Get All Transactions (filtered)
+// Get All Transactions 
 const getAllTransactions = async (req, res) => {
   try {
     const { userId, type } = req.body;

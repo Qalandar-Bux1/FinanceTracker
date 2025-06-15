@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import axios from "axios";
-
+import Dashboard from "./Dashboard";
 const Login = () => {
   const navigate = useNavigate();
 
@@ -18,19 +18,20 @@ const Login = () => {
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/users/login`,
-        values
-      );
-      localStorage.setItem("studentToken", res.data.token);
-      navigate("/dashboard");
-    } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/api/users/login",
+      values
+    );
+    localStorage.setItem("studentToken", res.data.token);
+    navigate("/dashboard");
+  } catch (err) {
+    alert(err.response?.data?.message || "Login failed");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 px-4">
